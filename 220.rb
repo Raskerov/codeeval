@@ -12,11 +12,11 @@ class Task
   private
 
   def output
-    counting_kids_and_treats
     counting_treats_per_kid
   end
 
   def counting_treats_per_kid
+    counting_kids_and_treats
     @collected_treats *= @scores[' Houses'].to_i
     treats_per_kid = @collected_treats / @kids
     treats_per_kid.floor

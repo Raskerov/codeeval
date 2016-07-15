@@ -1,29 +1,53 @@
-def input_line(&block)
-  input_file.each_line do |line|
-    block.call(line.chomp)
+class Task
+  attr_reader :line
+
+  def initialize(line)
+    @line = line
   end
-end
 
-def input_file
-  File.open(file_path, 'r')
-end
+  def to_s
+    output.to_s
+  end
 
-def file_path
-  ARGV[0]
-end
+  private
 
-input_line do |line|
-  letters_index = 0
+  def output
+    new_line = sentence_swap_operation
+  end
 
-  new_line = line.downcase!.split(//).each.with_object("") do |char, object|
-
-    if (letters_index % 2 == 0) && char =~ /[a-z]/
-      object << char.upcase
-    else
-      object << char
+  def sentence_swap_operation
+    letters_index = 0
+    sentence.each.with_object('') do |char, object|
+      object << if letters_index.even? && char =~ /[a-z]/
+        char.upcase
+      else
+        char
+      end
+        letters_index += 1 if char =~ /[a-z]/
     end
-    letters_index += 1 if char =~ /[a-z]/
   end
 
-  puts new_line
+  def sentence
+    line.downcase!.split(//)
+  end
+end
+
+class Reader
+  def self.input_line(&block)
+    input_file.each_line do |line|
+      block.call(line.chomp)
+    end
+  end
+
+  def self.input_file
+    File.open(file_path, 'r')
+  end
+
+  def self.file_path
+    ARGV[0]
+  end
+end
+
+Reader.input_line do |line|
+  puts Task.new(line)
 end

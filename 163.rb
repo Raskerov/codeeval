@@ -11,6 +11,7 @@ end
 def file_path
   ARGV[0]
 end
+
 require 'pry'
 def one
   puts "--*--"

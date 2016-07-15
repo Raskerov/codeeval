@@ -1,32 +1,66 @@
-def input_line(&block)
-  input_file.each_line do |line|
-    block.call(line.chomp)
+class Reader
+  def self.input_line(&block)
+    input_file.each_line do |line|
+      block.call(line.chomp)
+    end
+  end
+
+  def self.input_file
+    File.open(file_path, 'r')
+  end
+
+  def self.file_path
+    ARGV[0]
   end
 end
 
-def input_file
-  File.open(file_path, 'r')
-end
+class Task
+  attr_reader :line
 
-def file_path
-  ARGV[0]
-end
-
-input_line do |line|
-  array = line.split(" ")
-  word = array[0].split('')
-  pattern = array[1].split('')
-
-i = 0
-output = String.new
-
-while i <= word.length
-  if pattern[i] =~ /1/
-    output << word[i].to_s.upcase
-  else
-    output <<word[i].to_s
+  def initialize(line)
+    @line = line
   end
-    i += 1
+
+  def to_s
+    output.to_s
+  end
+
+  private
+
+  def output
+    sentence_swaped
+  end
+
+  def sentence_swaped
+    sentence_swap_operation
+    @sentence
+  end
+
+  def sentence_swap_operation
+    arrays_and_variables
+    sentence_swap_loop
+  end
+
+  def sentence_swap_loop
+    while @i <= @word.length
+      @sentence << if @mask[@i] =~ /1/
+                     @word[@i].to_s.upcase
+                   else
+                     @word[@i].to_s
+                  end
+      @i += 1
+    end
+  end
+
+  def arrays_and_variables
+    array = line.split(' ')
+    @word = array[0].split('')
+    @mask = array[1].split('')
+    @i = 0
+    @sentence = ''
+  end
 end
-puts output.to_s
+
+Reader.input_line do |line|
+  puts Task.new(line)
 end
